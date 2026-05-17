@@ -5,7 +5,7 @@ import java.util.Observable;
 
 
 /** The state of a game of 2048.
- *  @author TODO: YOUR NAME HERE
+ *  @author Zitong Liu
  */
 public class Model extends Observable {
     /** Current contents of the board. */
@@ -94,6 +94,44 @@ public class Model extends Observable {
         setChanged();
     }
 
+    private boolean tilt(){
+        boolean changed = false;
+        int boardSize = board.size();
+        boolean hasMerged[][] = new boolean[boardSize][boardSize];
+        for (int c = 0; c < boardSize; c++) {
+            for (int r = boardSize - 2; r >= 0; r--) {
+                Tile t = board.tile(c, r);
+                if (t == null) {
+                    continue;
+                } else {
+                    int emptyRow = r;
+                    int mergeRow = r;
+                    for (int nearr = r + 1; nearr < boardSize; nearr++) {
+                        Tile neart = board.tile(c, nearr);
+                        if (neart == null) {
+                            emptyRow = nearr;
+                        } else {
+                            if (t.value() == neart.value()) {
+                                mergeRow = nearr;
+                            }
+                            break;
+                        }
+                    }
+                    if (mergeRow != r && !hasMerged[mergeRow][c]) {
+                        changed = true;
+                        hasMerged[mergeRow][c] = true;
+                        board.move(c, mergeRow, t);
+                        score += t.value() * 2;
+                    } else if (emptyRow != r) {
+                        changed = true;
+                        board.move(c, emptyRow, t);
+                    }
+                }
+            }
+        }
+        return changed;
+    }
+
     /** Tilt the board toward SIDE. Return true iff this changes the board.
      *
      * 1. If two Tile objects are adjacent in the direction of motion and have
@@ -110,11 +148,14 @@ public class Model extends Observable {
         boolean changed;
         changed = false;
 
-        // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
-
         checkGameOver();
+
+        board.setViewingPerspective(side);
+        changed = tilt();
+        board.setViewingPerspective(Side.NORTH);
+
         if (changed) {
             setChanged();
         }
@@ -137,7 +178,14 @@ public class Model extends Observable {
      *  Empty spaces are stored as null.
      * */
     public static boolean emptySpaceExists(Board b) {
-        // TODO: Fill in this function.
+        int boardSize = b.size();
+        for (int c = 0; c < boardSize; c++) {
+            for (int r = 0; r < boardSize; r++) {
+                if (b.tile(c, r) == null) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -147,7 +195,15 @@ public class Model extends Observable {
      * given a Tile object t, we get its value with t.value().
      */
     public static boolean maxTileExists(Board b) {
-        // TODO: Fill in this function.
+        int boardSize = b.size();
+        for (int c = 0; c < boardSize; c++) {
+            for (int r = 0; r < boardSize; r++) {
+                Tile t = b.tile(c, r);
+                if (t != null && t.value() == MAX_PIECE) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -158,7 +214,27 @@ public class Model extends Observable {
      * 2. There are two adjacent tiles with the same value.
      */
     public static boolean atLeastOneMoveExists(Board b) {
-        // TODO: Fill in this function.
+        int boardSize = b.size();
+        int direction[][] = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+        for (int c = 0; c < boardSize; c++) {
+            for (int r = 0; r < boardSize; r++) {
+                Tile t = b.tile(c, r);
+                if (t == null) {
+                    return true;
+                } else {
+                    for (int i = 0; i < direction.length; i++) {
+                        int nearc = c + direction[i][0];
+                        int nearr = r + direction[i][1];
+                        if (nearc >= 0 && nearc < boardSize && nearr >= 0 && nearr < boardSize) {
+                            Tile neart = b.tile(nearc, nearr);
+                            if (neart == null || neart.value() == t.value()) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         return false;
     }
 
