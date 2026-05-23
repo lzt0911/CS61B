@@ -78,21 +78,29 @@ public class ArrayDeque<T> implements Iterable<T> {
     }
 
     public T removeFirst() {
+        if (size == 0) {
+            return null;
+        }
         if (items.length >= 16 && items.length / size > 4) {
             resize(size / SHRINK_RFACTOR);
         }
-        frontPos = (frontPos + 1 + items.length) % frontPos;
+        frontPos = (frontPos + 1 + items.length) % items.length;
         T returnItem = items[frontPos];
+        size -= 1;
         return returnItem;
     }
 
 
     public T removeLast() {
+        if (size == 0) {
+            return null;
+        }
         if (items.length >= 16 && items.length / size > 4) {
             resize(size / SHRINK_RFACTOR);
         }
-        lastPos = (lastPos - 1 + items.length) % frontPos;
+        lastPos = (lastPos - 1 + items.length) % items.length;
         T returnItem = items[lastPos];
+        size -= 1;
         return returnItem;
     }
 
