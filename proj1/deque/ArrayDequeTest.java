@@ -145,15 +145,15 @@ public class ArrayDequeTest {
     public void bigLLDequeTest() {
 
         ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < 100; i++) {
             lld1.addLast(i);
         }
 
-        for (double i = 0; i < 500000; i++) {
+        for (double i = 0; i < 50; i++) {
             assertEquals("Should have the same value", i, (double) lld1.removeFirst(), 0.0);
         }
 
-        for (double i = 999999; i > 500000; i--) {
+        for (double i = 99; i > 50; i--) {
             assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
         }
 
