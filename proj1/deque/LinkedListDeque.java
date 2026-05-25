@@ -134,39 +134,55 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
     }
 
     public boolean equals(Object o) {
-        if (this == o) {
+        if (!(o instanceof Deque) || ((Deque<T>) o).size() != this.size()) {
+            return false;
+        }
+        if (o == this) {
             return true;
         }
-        if (o == null) {
-            return false;
-        }
-        Deque<T> other;
-        if (o.getClass() == LinkedListDeque.class) {
-            other = (LinkedListDeque<T>) o;
-        } else if (o.getClass() == ArrayDeque.class) {
-            other = (ArrayDeque<T>) o;
-        } else {
-            return false;
-        }
-
-        if (this.size() != other.size()) {
-            return false;
-        }
-
-        for (int start = 0; start < this.size(); start++) {
-            boolean match = true;
-            for (int i = 0; i < this.size(); i++) {
-                T a = this.get((start + i) % this.size());
-                T b = other.get(i);
-                if (!a.equals(b)) {
-                    match = false;
-                    break;
-                }
-            }
-            if (match) {
-                return true;
+        for (int i = 0; i < this.size(); i++) {
+            Object item = ((Deque<T>) o).get(i);
+            if (!(this.get(i).equals(item))) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
+
+//    public boolean equals(Object o) {
+//        if (this == o) {
+//            return true;
+//        }
+//        if (o == null) {
+//            return false;
+//        }
+//        Deque<T> other;
+//        if (o.getClass() == LinkedListDeque.class) {
+//            other = (LinkedListDeque<T>) o;
+//        } else if (o.getClass() == ArrayDeque.class) {
+//            other = (ArrayDeque<T>) o;
+//        } else {
+//            return false;
+//        }
+//
+//        if (this.size() != other.size()) {
+//            return false;
+//        }
+//
+//        for (int start = 0; start < this.size(); start++) {
+//            boolean match = true;
+//            for (int i = 0; i < this.size(); i++) {
+//                T a = this.get((start + i) % this.size());
+//                T b = other.get(i);
+//                if (!a.equals(b)) {
+//                    match = false;
+//                    break;
+//                }
+//            }
+//            if (match) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 }
