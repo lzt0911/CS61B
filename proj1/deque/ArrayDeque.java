@@ -145,7 +145,8 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
         }
     }
 
-    private boolean equalsWithIterable(Iterable<T> thisIterable, Iterable<T> otherIterable, int thisSize, int otherSize) {
+    private boolean equalsWithIterable(Iterable<T> thisIterable, Iterable<T> otherIterable,
+                                       int thisSize, int otherSize) {
         if (thisSize != otherSize) {
             return false;
         }

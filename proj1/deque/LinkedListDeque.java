@@ -1,7 +1,5 @@
 package deque;
 
-import edu.princeton.cs.algs4.Bag;
-
 import java.util.Iterator;
 
 public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
@@ -135,7 +133,8 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         }
     }
 
-    private boolean equalsWithIterable(Iterable<T> thisIterable, Iterable<T> otherIterable, int thisSize, int otherSize) {
+    private boolean equalsWithIterable(Iterable<T> thisIterable, Iterable<T> otherIterable,
+                                       int thisSize, int otherSize) {
         if (thisSize != otherSize) {
             return false;
         }
