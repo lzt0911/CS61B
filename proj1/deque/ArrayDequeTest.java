@@ -2,6 +2,7 @@ package deque;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class ArrayDequeTest {
     @Test
@@ -157,5 +158,52 @@ public class ArrayDequeTest {
             assertEquals("Should have the same value", i, (double) lld1.removeLast(), 0.0);
         }
 
+    }
+
+    @Test
+    public void getTest() {
+        ArrayDeque<Integer> lld1 = new ArrayDeque<Integer>();
+        lld1.addFirst(0);
+        lld1.addFirst(1);
+        lld1.addFirst(2);
+        lld1.addFirst(3);
+        lld1.addFirst(4);
+        assertEquals(0, (int)lld1.get(4));
+        lld1.addFirst(6);
+        lld1.removeLast();
+        lld1.addFirst(8);
+        lld1.addFirst(9);
+        lld1.addLast(10);
+        lld1.addFirst(11);
+        assertEquals(10, (int)lld1.removeLast());
+    }
+
+    @Test
+    public void getTest2() {
+        ArrayDeque<Integer> MaxArrayDeque = new ArrayDeque<Integer>();
+        MaxArrayDeque.addLast(0);
+        MaxArrayDeque.addFirst(1);
+        MaxArrayDeque.addLast(2);
+        assertEquals(0, (int)MaxArrayDeque.get(1));
+        MaxArrayDeque.addLast(4);
+        assertEquals(1, (int)MaxArrayDeque.removeFirst());
+        MaxArrayDeque.addLast(6);
+        MaxArrayDeque.addFirst(7);
+        assertEquals(7, (int)MaxArrayDeque.removeFirst());
+        assertEquals(0, (int)MaxArrayDeque.get(0));
+        assertEquals(6, (int)MaxArrayDeque.removeLast());
+        MaxArrayDeque.addLast(11);
+        assertEquals(0, (int)MaxArrayDeque.removeFirst());
+        MaxArrayDeque.addFirst(13);
+        MaxArrayDeque.addLast(14);
+        MaxArrayDeque.addLast(15);
+        MaxArrayDeque.addLast(16);
+        MaxArrayDeque.addLast(17);
+        assertEquals(17, (int)MaxArrayDeque.removeLast());
+        MaxArrayDeque.addLast(19);
+        assertEquals(13, (int)MaxArrayDeque.removeFirst());
+        MaxArrayDeque.addFirst(21);
+        MaxArrayDeque.addLast(22);
+        assertEquals(22, (int)MaxArrayDeque.get(8));
     }
 }

@@ -1,14 +1,16 @@
 package deque;
 
+import edu.princeton.cs.algs4.Bag;
+
 import java.util.Iterator;
 
 public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
     private class Node {
-        public T item;
-        public Node next;
-        public Node prev;
+        private T item;
+        private Node next;
+        private Node prev;
 
-        public Node(T i, Node n, Node p) {
+        Node(T i, Node n, Node p) {
             item = i;
             next = n;
             prev = p;
@@ -92,6 +94,7 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         Node i = sentinel.next;
         while (index > 0) {
             i = i.next;
+            index -= 1;
         }
         return i.item;
     }
@@ -117,12 +120,12 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
     private class LinkedListDequeIterator<T> implements Iterator<T> {
         private Node i;
 
-        public LinkedListDequeIterator() {
+        LinkedListDequeIterator() {
             i = sentinel.next;
         }
 
         public boolean hasNext() {
-            return i == sentinel;
+            return i != sentinel;
         }
 
         public T next() {
@@ -132,6 +135,20 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         }
     }
 
+    private boolean equalsWithIterable(Iterable<T> thisIterable, Iterable<T> otherIterable, int thisSize, int otherSize) {
+        if (thisSize != otherSize) {
+            return false;
+        }
+        Iterator<T> thisIterator = thisIterable.iterator();
+        Iterator<T> otherIterator = otherIterable.iterator();
+        while (thisIterator.hasNext()) {
+            if (!thisIterator.next().equals(otherIterator.next())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -139,20 +156,14 @@ public class LinkedListDeque<T> implements Iterable<T>, Deque<T> {
         if (o == null) {
             return false;
         }
-        if (o.getClass() != this.getClass()) {
-            return false;
+        if (o.getClass() == LinkedListDeque.class) {
+            LinkedListDeque<T> other = (LinkedListDeque<T>) o;
+            return equalsWithIterable(this, other, this.size(), other.size());
+        } else if (o.getClass() == ArrayDeque.class) {
+            ArrayDeque<T> other = (ArrayDeque<T>) o;
+            return equalsWithIterable(this, other, this.size(), other.size());
         }
-        LinkedListDeque<T> other = (LinkedListDeque<T>) o;
-        if (this.size() != other.size()) {
-            return false;
-        }
-        Iterator<T> curIterator = this.iterator();
-        Iterator<T> otherIterator = other.iterator();
-        while (curIterator.hasNext()) {
-            if (curIterator.next() != otherIterator.next()) {
-                return false;
-            }
-        }
-        return true;
+
+        return false;
     }
 }

@@ -1,7 +1,6 @@
 package deque;
 
 import java.util.Iterator;
-import java.util.stream.StreamSupport;
 
 public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
     private int frontPos;
@@ -21,26 +20,23 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
 
     private void resize(int capacity) {
         T[] a = (T[]) new Object[capacity];
-        if (size == items.length || (size < items.length && frontPos > lastPos)) {
-            int i = 0;
-            while (i < lastPos) {
-                a[i] = items[i];
-                i += 1;
+        int frontBegin = (frontPos + 1 + items.length) % items.length;
+        int lastEnd = (lastPos - 1 + items.length) % items.length;
+        int j = 0;
+        if (frontBegin < lastEnd) {
+            for (int i = frontBegin; i <= lastEnd; i++, j++) {
+                a[j] = items[i];
             }
-            i = capacity - 1;
-            int j = items.length - 1;
-            while (j > frontPos) {
-                a[i] = items[j];
-                i -= 1;
-                j -= 1;
-            }
-            frontPos = i;
         } else {
-            frontPos = (frontPos + 1 + items.length) % items.length;
-            System.arraycopy(items, frontPos, a, 0, size);
-            lastPos = size;
-            frontPos = capacity - 1;
+            for (int i = frontBegin; i <= items.length - 1; i++, j++) {
+                a[j] = items[i];
+            }
+            for (int i = 0; i <= lastEnd; i++, j++) {
+                a[j] = items[i];
+            }
         }
+        frontPos = capacity - 1;
+        lastPos = j;
 
         items = a;
     }
@@ -133,7 +129,7 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
         private int wizPos;
         private int currentNum = 0;
 
-        public ArrayDequeIterator() {
+        ArrayDequeIterator() {
             wizPos = (frontPos + 1 + items.length) % items.length;
         }
 
@@ -149,6 +145,20 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
         }
     }
 
+    private boolean equalsWithIterable(Iterable<T> thisIterable, Iterable<T> otherIterable, int thisSize, int otherSize) {
+        if (thisSize != otherSize) {
+            return false;
+        }
+        Iterator<T> thisIterator = thisIterable.iterator();
+        Iterator<T> otherIterator = otherIterable.iterator();
+        while (thisIterator.hasNext()) {
+            if (!thisIterator.next().equals(otherIterator.next())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -156,20 +166,14 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
         if (o == null) {
             return false;
         }
-        if (o.getClass() != this.getClass()) {
-            return false;
+        if (o.getClass() == LinkedListDeque.class) {
+            LinkedListDeque<T> other = (LinkedListDeque<T>) o;
+            return equalsWithIterable(this, other, this.size(), other.size());
+        } else if (o.getClass() == ArrayDeque.class) {
+            ArrayDeque<T> other = (ArrayDeque<T>) o;
+            return equalsWithIterable(this, other, this.size(), other.size());
         }
-        ArrayDeque<T> other = (ArrayDeque<T>) o;
-        if (this.size() != other.size()) {
-            return false;
-        }
-        Iterator<T> curIterator = this.iterator();
-        Iterator<T> otherIterator = other.iterator();
-        while (curIterator.hasNext()) {
-            if (curIterator.next() != otherIterator.next()) {
-                return false;
-            }
-        }
-        return true;
+
+        return false;
     }
 }
