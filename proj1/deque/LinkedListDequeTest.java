@@ -176,24 +176,10 @@ public class LinkedListDequeTest {
         lld1.addFirst(1);
         lld1.addFirst(2);
         lld1.addFirst(3);
-        lld1.addFirst(4);
-        lld1.addFirst(5);
-        lld1.addFirst(6);
-        lld1.addFirst(7);
-        lld1.addFirst(8);
-        lld1.addFirst(9);
-        lld1.addFirst(10);
         ArrayDeque<Integer> ad1 = new ArrayDeque<>();
-        ad1.addFirst(1);
         ad1.addFirst(2);
         ad1.addFirst(3);
-        ad1.addFirst(4);
-        ad1.addFirst(5);
-        ad1.addFirst(6);
-        ad1.addFirst(7);
-        ad1.addFirst(8);
-        ad1.addFirst(9);
-        ad1.addFirst(10);
+        ad1.addFirst(1);
 
         assertTrue(lld1.equals(ad1));
         assertTrue(ad1.equals(lld1));

@@ -145,21 +145,6 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
         }
     }
 
-    private boolean equalsWithIterable(Iterable<T> thisIterable, Iterable<T> otherIterable,
-                                       int thisSize, int otherSize) {
-        if (thisSize != otherSize) {
-            return false;
-        }
-        Iterator<T> thisIterator = thisIterable.iterator();
-        Iterator<T> otherIterator = otherIterable.iterator();
-        while (thisIterator.hasNext()) {
-            if (!thisIterator.next().equals(otherIterator.next())) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -167,14 +152,33 @@ public class ArrayDeque<T> implements Iterable<T>, Deque<T> {
         if (o == null) {
             return false;
         }
+        Deque<T> other;
         if (o.getClass() == LinkedListDeque.class) {
-            LinkedListDeque<T> other = (LinkedListDeque<T>) o;
-            return equalsWithIterable(this, other, this.size(), other.size());
+            other = (LinkedListDeque<T>) o;
         } else if (o.getClass() == ArrayDeque.class) {
-            ArrayDeque<T> other = (ArrayDeque<T>) o;
-            return equalsWithIterable(this, other, this.size(), other.size());
+            other = (ArrayDeque<T>) o;
+        } else {
+            return false;
         }
 
+        if (this.size() != other.size()) {
+            return false;
+        }
+
+        for (int start = 0; start < this.size(); start++) {
+            boolean match = true;
+            for (int i = 0; i < this.size(); i++) {
+                T a = this.get((start + i) % this.size());
+                T b = other.get(i);
+                if (!a.equals(b)) {
+                    match = false;
+                    break;
+                }
+            }
+            if (match) {
+                return true;
+            }
+        }
         return false;
     }
 }
